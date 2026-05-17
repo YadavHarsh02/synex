@@ -5,36 +5,61 @@ import {
   Filter, 
   ArrowUpDown, 
   Download, 
-  MoreHorizontal,
+  Trash2,
   Plus,
   ArrowUpCircle,
   ArrowDownCircle,
   Calendar
 } from 'lucide-react';
-import { Card, Button, cn } from '../components/ui';
+import { Card, Button, cn, Skeleton, useToast } from '../components/ui';
 import { Link } from 'react-router-dom';
-
 import api from '../services/api';
 
 const Transactions = () => {
+  const { showToast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('ALL');
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await api.get('/transactions');
+      setTransactions(response.data);
+    } catch (error) {
+      console.error("Failed to fetch transactions:", error);
+      showToast("Failed to fetch transactions.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await api.get('/transactions');
-        setTransactions(response.data);
-      } catch (error) {
-        console.error("Failed to fetch transactions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTransactions();
   }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
+    
+    const previousTransactions = [...transactions];
+    
+    // Optimistic UI update: immediately remove from frontend state
+    setTransactions(prev => prev.filter(tx => tx.id !== id));
+    setDeletingId(id);
+    
+    try {
+      await api.delete(`/transactions/${id}`);
+      showToast("Transaction deleted successfully!", "success");
+    } catch (error) {
+      console.error("Failed to delete transaction:", error);
+      showToast("Failed to delete transaction. Reverting...", "error");
+      // Rollback optimistic state update on failure
+      setTransactions(previousTransactions);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const filteredTransactions = transactions.filter(tx => {
     const matchesSearch = tx.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -44,7 +69,42 @@ const Transactions = () => {
   });
 
   if (loading) {
-    return <div className="h-full flex items-center justify-center">Loading transactions...</div>;
+    return (
+      <div className="space-y-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-48" />
+            <Skeleton className="h-4 w-80" />
+          </div>
+          <Skeleton className="h-10 w-36 rounded-full" />
+        </div>
+        
+        {/* Filters Skeleton */}
+        <Card className="p-4 rounded-2xl">
+          <Skeleton className="h-12 w-full" />
+        </Card>
+        
+        {/* Table Skeleton */}
+        <Card className="p-0 overflow-hidden rounded-3xl">
+          <div className="p-6 border-b border-white/5 space-y-4">
+            <Skeleton className="h-4 w-full" />
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex justify-between items-center py-4 border-b border-white/5 last:border-0">
+                <div className="flex items-center space-x-4 w-1/3">
+                  <Skeleton className="w-10 h-10 rounded-xl" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-4 w-16 ml-auto" />
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    );
   }
 
   return (
@@ -94,12 +154,8 @@ const Transactions = () => {
                 </button>
               ))}
             </div>
-            <Button variant="secondary" className="px-4 py-2 rounded-xl">
-              <Filter className="w-4 h-4" />
-              <span className="hidden sm:inline">Advanced</span>
-            </Button>
-            <Button variant="secondary" className="px-4 py-2 rounded-xl">
-              <Download className="w-4 h-4" />
+            <Button variant="secondary" className="px-4 py-2 rounded-xl" onClick={fetchTransactions}>
+              Refresh
             </Button>
           </div>
         </div>
@@ -138,11 +194,11 @@ const Transactions = () => {
                   </td>
                   <td className="p-6">
                     <span className="text-xs font-bold px-3 py-1 bg-white/5 rounded-full border border-white/5 text-on-surface-variant">
-                      {tx.category}
+                      {tx.category?.name || 'General'}
                     </span>
                   </td>
                   <td className="p-6">
-                    <span className="text-sm text-on-surface-variant">{tx.method}</span>
+                    <span className="text-sm text-on-surface-variant">{tx.paymentMethod}</span>
                   </td>
                   <td className="p-6">
                     <div className="flex items-center text-sm text-on-surface-variant">
@@ -154,11 +210,16 @@ const Transactions = () => {
                     "p-6 text-right font-bold text-sm",
                     tx.type === 'INCOME' ? "text-success" : "text-on-surface"
                   )}>
-                    {tx.type === 'INCOME' ? '+' : ''}{tx.amount.toFixed(2)}
+                    {tx.type === 'INCOME' ? '+' : ''}{Number(tx.amount).toFixed(2)}
                   </td>
                   <td className="p-6 text-right">
-                    <button className="text-on-surface-variant hover:text-on-surface transition-colors p-2 hover:bg-white/5 rounded-xl">
-                      <MoreHorizontal className="w-5 h-5" />
+                    <button 
+                      onClick={() => handleDelete(tx.id)}
+                      disabled={deletingId === tx.id}
+                      className="text-error/60 hover:text-error transition-colors p-2 hover:bg-error/10 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Delete Transaction"
+                    >
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </td>
                 </tr>
@@ -182,12 +243,12 @@ const Transactions = () => {
           </div>
         )}
 
-        {/* Pagination Placeholder */}
+        {/* Total stats info */}
         <div className="p-6 border-t border-white/5 flex items-center justify-between">
           <p className="text-xs text-on-surface-variant">Showing <span className="text-on-surface font-bold">{filteredTransactions.length}</span> of <span className="text-on-surface font-bold">{transactions.length}</span> transactions</p>
           <div className="flex space-x-2">
             <Button variant="secondary" className="px-4 py-2 text-xs" disabled>Previous</Button>
-            <Button variant="secondary" className="px-4 py-2 text-xs">Next</Button>
+            <Button variant="secondary" className="px-4 py-2 text-xs" disabled>Next</Button>
           </div>
         </div>
       </Card>

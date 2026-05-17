@@ -9,14 +9,34 @@ const ProtectedRoute = () => {
   const [onboardingStatus, setOnboardingStatus] = useState('loading'); // loading, complete, incomplete
   const location = useLocation();
 
+  // Axios request interceptor to dynamically refresh and inject Clerk tokens
+  useEffect(() => {
+    if (!isSignedIn) return;
+
+    const interceptor = api.interceptors.request.use(
+      async (config) => {
+        try {
+          const token = await getToken();
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        } catch (error) {
+          console.error("Failed to attach dynamic Clerk token:", error);
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    return () => {
+      api.interceptors.request.eject(interceptor);
+    };
+  }, [isSignedIn, getToken]);
+
   useEffect(() => {
     const initAuth = async () => {
       if (isSignedIn) {
-        const token = await getToken();
-        setAuthToken(token);
-        
         try {
-          // Sync user with backend and check onboarding
           const response = await api.post('/user/upsert', {
             email: user.primaryEmailAddress.emailAddress,
             name: user.fullName || user.username,
@@ -37,7 +57,7 @@ const ProtectedRoute = () => {
     if (isLoaded) {
       initAuth();
     }
-  }, [isLoaded, isSignedIn, getToken, user]);
+  }, [isLoaded, isSignedIn, user]);
 
   if (!isLoaded || (isSignedIn && onboardingStatus === 'loading')) {
     return (
