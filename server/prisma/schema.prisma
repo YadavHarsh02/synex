@@ -1,0 +1,158 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// --- Enums ---
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
+  CRYPTO
+  OTHER
+}
+
+enum InsightType {
+  BUDGET_EXCEEDED
+  SAVING_TIP
+  AI_PREDICTION
+  MILESTONE
+  ANOMALY_DETECTED
+}
+
+enum RecurringInterval {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+// --- Models ---
+
+model User {
+  id           String   @id @default(cuid())
+  clerkUserId  String   @unique // The ID from Clerk authentication
+  email        String?  @unique
+  name         String?
+  imageUrl     String?
+  currency     String   @default("USD")
+  onboardingCompleted Boolean @default(false)
+  
+  // Relations
+  transactions Transaction[]
+  categories   Category[]
+  budgets      Budget[]
+  insights     Insight[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([clerkUserId])
+}
+
+model Category {
+  id        String       @id @default(cuid())
+  name      String
+  type      CategoryType
+  icon      String?      // Lucide icon name or emoji
+  color     String?      // Hex code for UI
+  
+  // Optional userId: if null, it's a "System" category available to everyone
+  userId    String?
+  user      User?        @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  // Relations
+  transactions Transaction[]
+  budgets      Budget[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, userId])
+  @@index([userId])
+}
+
+model Transaction {
+  id            String          @id @default(cuid())
+  amount        Decimal         @db.Decimal(12, 2)
+  title         String
+  note          String?
+  type          TransactionType
+  date          DateTime        @default(now())
+  paymentMethod PaymentMethod   @default(CASH)
+  
+  // Recurring logic
+  isRecurring       Boolean           @default(false)
+  recurringInterval RecurringInterval?
+  
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, date]) // For dashboard range queries
+  @@index([categoryId])
+}
+
+model Budget {
+  id         String   @id @default(cuid())
+  amount     Decimal  @db.Decimal(12, 2)
+  month      Int      // 1-12
+  year       Int      // e.g. 2024
+  
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, categoryId, month, year])
+  @@index([userId])
+}
+
+model Insight {
+  id        String      @id @default(cuid())
+  message   String
+  type      InsightType
+  isRead    Boolean     @default(false)
+  
+  // Metadata for AI or specific triggers
+  metadata  Json?
+  
+  // Relations
+  userId    String
+  user      User        @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([userId])
+}
+
