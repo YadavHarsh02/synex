@@ -12,7 +12,7 @@ console.log('Clerk Key Loaded:', !!process.env.CLERK_SECRET_KEY);
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://synex-rho.vercel.app', 'https://synex-rho.vercel.app/'],
     credentials: true
 }));
 app.use(express.json());
