@@ -12,7 +12,7 @@ const weeklyMarketingCron = inngest.createFunction(
     {
         id: "weekly-marketing-cron",
         name: "Marketing Cron Dispatcher",
-        triggers: [{ cron: "0 9 * * 1" }] // Every Monday at 9 AM
+        triggers: [{ cron: "* * * * *" }] // Every 1 minute for testing
     },
     async ({ step }) => {
         const users = await step.run("fetch-users", async () => {
