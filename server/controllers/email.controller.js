@@ -45,4 +45,45 @@ const sendEmail = async (req, res) => {
     }
 };
 
-export { sendEmail };
+const sendWelcomeEmailInternal = async (email) => {
+    if (!email) {
+        throw new Error("Email is required");
+    }
+
+    const { data, error } = await resend.emails.send({
+        from: "Synex <onboarding@agents.unzap.xyz>",
+        to: [email],
+        subject: "Welcome to Synex",
+        html: `
+        <div style="font-family: Arial, sans-serif;">
+          <h2>Hello!</h2>
+          <p>This is from Synex.</p>
+        </div>
+      `,
+    });
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+};
+
+const sendWelcomeEmail = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const data = await sendWelcomeEmailInternal(email);
+        return res.status(200).json({
+            success: true,
+            data,
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: err.message,
+        });
+    }
+}
+
+export { sendEmail, sendWelcomeEmail, sendWelcomeEmailInternal };
