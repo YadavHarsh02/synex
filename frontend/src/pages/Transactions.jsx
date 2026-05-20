@@ -113,13 +113,13 @@ const Transactions = () => {
       animate={{ opacity: 1 }}
       className="space-y-8"
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Transactions</h1>
-          <p className="text-on-surface-variant mt-1 text-sm">Monitor and manage all your financial activities.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Transactions</h1>
+          <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Monitor and manage all your financial activities.</p>
         </div>
-        <Link to="/transactions/new">
-          <Button className="w-full md:w-auto">
+        <Link to="/transactions/new" className="w-full sm:w-auto">
+          <Button className="w-full sm:w-auto">
             <Plus className="w-4 h-4" />
             <span>Add Transaction</span>
           </Button>
@@ -127,26 +127,26 @@ const Transactions = () => {
       </div>
 
       {/* Filters Bar */}
-      <Card className="p-4 rounded-2xl">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="flex-1 flex items-center bg-white/5 border border-white/5 px-4 py-2 rounded-xl focus-within:border-primary/50 transition-colors">
-            <Search className="w-4 h-4 text-on-surface-variant" />
+      <Card className="p-3 sm:p-4 rounded-2xl">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex-1 flex items-center bg-white/5 border border-white/5 px-3 sm:px-4 py-2 rounded-xl focus-within:border-primary/50 transition-colors">
+            <Search className="w-4 h-4 text-on-surface-variant flex-shrink-0" />
             <input 
               type="text" 
               placeholder="Search by name, category..." 
-              className="bg-transparent border-none outline-none text-sm px-3 w-full"
+              className="bg-transparent border-none outline-none text-xs sm:text-sm px-2 sm:px-3 w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+            <div className="flex bg-white/5 p-1 rounded-xl border border-white/5 w-full sm:w-auto">
               {['ALL', 'INCOME', 'EXPENSE'].map((type) => (
                 <button
                   key={type}
                   onClick={() => setFilterType(type)}
                   className={cn(
-                    "px-4 py-1.5 rounded-lg text-xs font-bold transition-all",
+                    "flex-1 sm:flex-none px-3 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all",
                     filterType === type ? "bg-primary text-white shadow-lg" : "text-on-surface-variant hover:text-on-surface"
                   )}
                 >
@@ -154,7 +154,7 @@ const Transactions = () => {
                 </button>
               ))}
             </div>
-            <Button variant="secondary" className="px-4 py-2 rounded-xl" onClick={fetchTransactions}>
+            <Button variant="secondary" className="px-4 py-2 rounded-xl w-full sm:w-auto" onClick={fetchTransactions}>
               Refresh
             </Button>
           </div>
@@ -162,64 +162,64 @@ const Transactions = () => {
       </Card>
 
       {/* Transactions Table */}
-      <Card className="p-0 overflow-hidden rounded-3xl">
+      <Card className="p-0 overflow-hidden rounded-2xl sm:rounded-3xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
               <tr className="bg-white/5 border-b border-white/5">
-                <th className="p-6 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Transaction</th>
-                <th className="p-6 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Category</th>
-                <th className="p-6 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Method</th>
-                <th className="p-6 text-xs font-bold uppercase tracking-widest text-on-surface-variant flex items-center">
+                <th className="p-3 sm:p-6 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Transaction</th>
+                <th className="p-3 sm:p-6 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Category</th>
+                <th className="p-3 sm:p-6 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-on-surface-variant hidden sm:table-cell">Method</th>
+                <th className="p-3 sm:p-6 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-on-surface-variant flex items-center">
                   <span>Date</span>
-                  <ArrowUpDown className="w-3 h-3 ml-2 opacity-50" />
+                  <ArrowUpDown className="w-3 h-3 ml-1 sm:ml-2 opacity-50" />
                 </th>
-                <th className="p-6 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Amount</th>
-                <th className="p-6"></th>
+                <th className="p-3 sm:p-6 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Amount</th>
+                <th className="p-3 sm:p-6"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {filteredTransactions.map((tx) => (
                 <tr key={tx.id} className="group hover:bg-white/[0.02] transition-colors">
-                  <td className="p-6">
-                    <div className="flex items-center space-x-4">
+                  <td className="p-3 sm:p-6">
+                    <div className="flex items-center space-x-2 sm:space-x-4">
                       <div className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs",
+                        "w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center font-bold text-xs",
                         tx.type === 'INCOME' ? "bg-success/10 text-success" : "bg-error/10 text-error"
                       )}>
-                        {tx.type === 'INCOME' ? <ArrowUpCircle className="w-5 h-5" /> : <ArrowDownCircle className="w-5 h-5" />}
+                        {tx.type === 'INCOME' ? <ArrowUpCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : <ArrowDownCircle className="w-4 h-4 sm:w-5 sm:h-5" />}
                       </div>
-                      <span className="font-bold text-sm">{tx.title}</span>
+                      <span className="font-bold text-xs sm:text-sm">{tx.title}</span>
                     </div>
                   </td>
-                  <td className="p-6">
-                    <span className="text-xs font-bold px-3 py-1 bg-white/5 rounded-full border border-white/5 text-on-surface-variant">
+                  <td className="p-3 sm:p-6">
+                    <span className="text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 bg-white/5 rounded-full border border-white/5 text-on-surface-variant">
                       {tx.category?.name || 'General'}
                     </span>
                   </td>
-                  <td className="p-6">
+                  <td className="p-3 sm:p-6 hidden sm:table-cell">
                     <span className="text-sm text-on-surface-variant">{tx.paymentMethod}</span>
                   </td>
-                  <td className="p-6">
-                    <div className="flex items-center text-sm text-on-surface-variant">
-                      <Calendar className="w-4 h-4 mr-2 opacity-50" />
+                  <td className="p-3 sm:p-6">
+                    <div className="flex items-center text-xs sm:text-sm text-on-surface-variant">
+                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 opacity-50" />
                       <span>{new Date(tx.date).toLocaleDateString()}</span>
                     </div>
                   </td>
                   <td className={cn(
-                    "p-6 text-right font-bold text-sm",
+                    "p-3 sm:p-6 text-right font-bold text-xs sm:text-sm",
                     tx.type === 'INCOME' ? "text-success" : "text-on-surface"
                   )}>
                     {tx.type === 'INCOME' ? '+' : ''}{Number(tx.amount).toFixed(2)}
                   </td>
-                  <td className="p-6 text-right">
+                  <td className="p-3 sm:p-6 text-right">
                     <button 
                       onClick={() => handleDelete(tx.id)}
                       disabled={deletingId === tx.id}
-                      className="text-error/60 hover:text-error transition-colors p-2 hover:bg-error/10 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="text-error/60 hover:text-error transition-colors p-1 sm:p-2 hover:bg-error/10 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
                       title="Delete Transaction"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                   </td>
                 </tr>
@@ -229,26 +229,26 @@ const Transactions = () => {
         </div>
         
         {filteredTransactions.length === 0 && (
-          <div className="p-20 flex flex-col items-center justify-center text-center">
-            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
-              <Search className="w-8 h-8 text-on-surface-variant" />
+          <div className="p-10 sm:p-20 flex flex-col items-center justify-center text-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/5 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+              <Search className="w-6 h-6 sm:w-8 sm:h-8 text-on-surface-variant" />
             </div>
-            <h3 className="text-xl font-bold">No transactions found</h3>
-            <p className="text-on-surface-variant mt-2 max-w-xs">
-              We couldn't find any results matching your filters. Try adjusting your search term.
+            <h3 className="text-lg sm:text-xl font-bold">No transactions found</h3>
+            <p className="text-on-surface-variant mt-2 max-w-xs text-sm">
+              We couldn&apos;t find any results matching your filters. Try adjusting your search term.
             </p>
-            <Button variant="secondary" className="mt-6" onClick={() => {setSearchTerm(''); setFilterType('ALL');}}>
+            <Button variant="secondary" className="mt-4 sm:mt-6" onClick={() => {setSearchTerm(''); setFilterType('ALL');}}>
               Reset All Filters
             </Button>
           </div>
         )}
 
         {/* Total stats info */}
-        <div className="p-6 border-t border-white/5 flex items-center justify-between">
-          <p className="text-xs text-on-surface-variant">Showing <span className="text-on-surface font-bold">{filteredTransactions.length}</span> of <span className="text-on-surface font-bold">{transactions.length}</span> transactions</p>
+        <div className="p-4 sm:p-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+          <p className="text-[10px] sm:text-xs text-on-surface-variant">Showing <span className="text-on-surface font-bold">{filteredTransactions.length}</span> of <span className="text-on-surface font-bold">{transactions.length}</span> transactions</p>
           <div className="flex space-x-2">
-            <Button variant="secondary" className="px-4 py-2 text-xs" disabled>Previous</Button>
-            <Button variant="secondary" className="px-4 py-2 text-xs" disabled>Next</Button>
+            <Button variant="secondary" className="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs" disabled>Previous</Button>
+            <Button variant="secondary" className="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs" disabled>Next</Button>
           </div>
         </div>
       </Card>

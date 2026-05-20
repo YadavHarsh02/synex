@@ -132,46 +132,46 @@ const Analytics = () => {
       animate={{ opacity: 1 }}
       className="space-y-8 pb-20"
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Financial Analytics</h1>
-          <p className="text-on-surface-variant mt-1 text-sm">Deep dive into your spending habits and income trends.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Financial Analytics</h1>
+          <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Deep dive into your spending habits and income trends.</p>
         </div>
-        <div className="flex items-center space-x-3">
-          <Button variant="secondary" onClick={fetchAnalyticsData}>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+          <Button variant="secondary" onClick={fetchAnalyticsData} className="w-full sm:w-auto">
             <span>Refresh Trends</span>
           </Button>
-          <Button variant="secondary" className="px-4 py-2">
+          <Button variant="secondary" className="px-4 py-2 w-full sm:w-auto">
             <Download className="w-4 h-4" />
           </Button>
         </div>
       </div>
 
       {/* Main Trend Chart */}
-      <Card className="p-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+      <Card className="p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-10">
           <div className="flex items-center space-x-3">
-            <div className="p-3 rounded-2xl bg-primary/10 text-primary">
-              <Activity className="w-5 h-5" />
+            <div className="p-2 sm:p-3 rounded-2xl bg-primary/10 text-primary">
+              <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-lg">Cash Flow Trend</h3>
-              <p className="text-xs text-on-surface-variant">Monthly comparison of total income vs expenses</p>
+              <h3 className="font-bold text-base sm:text-lg">Cash Flow Trend</h3>
+              <p className="text-[10px] sm:text-xs text-on-surface-variant">Monthly comparison of total income vs expenses</p>
             </div>
           </div>
-          <div className="flex items-center space-x-6 text-xs font-bold">
+          <div className="flex items-center space-x-4 sm:space-x-6 text-[10px] sm:text-xs font-bold">
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full bg-primary" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-primary" />
               <span className="text-on-surface-variant">Income</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full bg-error" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-error" />
               <span className="text-on-surface-variant">Expenses</span>
             </div>
           </div>
         </div>
         
-        <div className="h-[400px] w-full">
+        <div className="h-[250px] sm:h-[350px] lg:h-[400px] w-full">
           {trendData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -217,8 +217,8 @@ const Analytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Dynamic Category Spending Breakdown */}
         <Card className="flex flex-col justify-between">
-          <h3 className="font-bold text-lg mb-6">Category Spending</h3>
-          <div className="flex-1 min-h-[250px] relative flex items-center justify-center">
+          <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">Category Spending</h3>
+          <div className="flex-1 min-h-[180px] sm:min-h-[250px] relative flex items-center justify-center">
             {pieData.length > 0 ? (
               <>
                 <ResponsiveContainer width="100%" height="100%">
@@ -271,16 +271,16 @@ const Analytics = () => {
 
         {/* Savings Growth */}
         <Card className="flex flex-col">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-bold text-lg">Savings Growth</h3>
+          <div className="flex items-center justify-between mb-4 sm:mb-8">
+            <h3 className="font-bold text-base sm:text-lg">Savings Growth</h3>
             {trendData.length > 0 && (
-              <div className="flex items-center space-x-1 text-success text-xs font-bold">
-                <ArrowUpRight className="w-4 h-4" />
+              <div className="flex items-center space-x-1 text-success text-[10px] sm:text-xs font-bold">
+                <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>Steady Growth</span>
               </div>
             )}
           </div>
-          <div className="flex-1 min-h-[250px]">
+          <div className="flex-1 min-h-[180px] sm:min-h-[250px]">
             {trendData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>

@@ -89,14 +89,14 @@ const DashboardLayout = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
         {/* Navbar */}
-        <header className="h-20 bg-background/50 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-8 z-30">
+        <header className="h-16 sm:h-20 bg-background/50 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4 sm:px-8 z-30">
           <div className="flex items-center md:hidden">
-            <button onClick={() => setIsSidebarOpen(true)} className="mr-4">
-              <Menu className="w-6 h-6" />
+            <button onClick={() => setIsSidebarOpen(true)} className="mr-3 sm:mr-4">
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <div className="flex items-center space-x-2">
-              <img src="/logo.png" alt="Synex Logo" className="w-6 h-6" />
-              <span className="text-xl font-bold">synex</span>
+              <img src="/logo.png" alt="Synex Logo" className="w-5 h-5 sm:w-6 sm:h-6" />
+              <span className="text-lg sm:text-xl font-bold">synex</span>
             </div>
           </div>
 
@@ -109,18 +109,18 @@ const DashboardLayout = () => {
             />
           </div>
 
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3 sm:space-x-6">
             <button className="relative text-on-surface-variant hover:text-on-surface transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border-2 border-background"></span>
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="absolute top-0 right-0 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-primary rounded-full border-2 border-background"></span>
             </button>
-            <div className="h-8 w-[1px] bg-white/10 mx-2"></div>
-            <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: 'w-10 h-10 ring-2 ring-primary/20' } }} />
+            <div className="h-6 sm:h-8 w-[1px] bg-white/10 mx-1 sm:mx-2"></div>
+            <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: 'w-8 h-8 sm:w-10 sm:h-10 ring-2 ring-primary/20' } }} />
           </div>
         </header>
 
-        {/* Dynamic Content */}
-        <main className="flex-1 overflow-y-auto p-8 relative scrollbar-hide">
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 relative scrollbar-hide">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
