@@ -213,15 +213,15 @@ const Dashboard = () => {
       className="space-y-8"
     >
       {/* Welcome Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Financial Overview</h1>
-          <p className="text-on-surface-variant mt-1 text-sm">Welcome back! Here's what's happening with your money today.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Financial Overview</h1>
+          <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Welcome back! Here&apos;s what&apos;s happening with your money today.</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           <Button variant="secondary" className="hidden sm:flex" onClick={fetchDashboardData}>Refresh Overview</Button>
-          <Link to="/transactions/new">
-            <Button>Add Transaction</Button>
+          <Link to="/transactions/new" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">Add Transaction</Button>
           </Link>
         </div>
       </div>
@@ -238,9 +238,9 @@ const Dashboard = () => {
                 {stat.change}
               </div>
             </div>
-            <div className="mt-6">
-              <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest">{stat.title}</p>
-              <h2 className="text-2xl font-bold mt-1 tracking-tight">{stat.value}</h2>
+            <div className="mt-4 sm:mt-6">
+              <p className="text-[10px] sm:text-xs text-on-surface-variant font-bold uppercase tracking-widest">{stat.title}</p>
+              <h2 className="text-xl sm:text-2xl font-bold mt-1 tracking-tight">{stat.value}</h2>
             </div>
           </Card>
         ))}
@@ -249,16 +249,16 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Chart */}
         <Card className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-8">
             <div>
-              <h3 className="font-bold text-lg">Activity Trend</h3>
-              <p className="text-xs text-on-surface-variant">Monthly comparison of total income vs expenses</p>
+              <h3 className="font-bold text-base sm:text-lg">Activity Trend</h3>
+              <p className="text-[10px] sm:text-xs text-on-surface-variant">Monthly comparison of total income vs expenses</p>
             </div>
-            <select className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs font-bold outline-none">
+            <select className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs font-bold outline-none w-full sm:w-auto">
               <option>Full Timeline</option>
             </select>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[200px] sm:h-[300px] w-full">
             {trendData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trendData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -293,8 +293,8 @@ const Dashboard = () => {
 
         {/* Expense Breakdown */}
         <Card>
-          <h3 className="font-bold text-lg mb-6">Spending Breakdown</h3>
-          <div className="h-[250px] relative">
+          <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">Spending Breakdown</h3>
+          <div className="h-[180px] sm:h-[250px] relative">
             {pieData.length > 0 ? (
               <>
                 <ResponsiveContainer width="100%" height="100%">

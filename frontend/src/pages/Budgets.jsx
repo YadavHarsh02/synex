@@ -21,38 +21,38 @@ const BudgetCard = ({ budget, onDelete, isDeleting }) => {
   const color = budget.category?.color || '#006c49';
 
   return (
-    <Card className="flex flex-col h-full justify-between min-h-[220px]">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
+    <Card className="flex flex-col h-full justify-between min-h-[180px] sm:min-h-[220px]">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white" 
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-white" 
             style={{ backgroundColor: color }}
           >
-            <PieChart className="w-5 h-5" />
+            <PieChart className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div>
-            <h4 className="font-bold text-sm">{budget.category?.name || 'General'}</h4>
-            <p className="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Monthly Budget</p>
+            <h4 className="font-bold text-xs sm:text-sm">{budget.category?.name || 'General'}</h4>
+            <p className="text-[8px] sm:text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Monthly Budget</p>
           </div>
         </div>
         <button 
           onClick={() => onDelete(budget.id)}
           disabled={isDeleting}
-          className="text-error/60 hover:text-error transition-colors p-2 hover:bg-error/10 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
+          className="text-error/60 hover:text-error transition-colors p-1 sm:p-2 hover:bg-error/10 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
           title="Delete Budget"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <div className="flex justify-between items-end">
           <div>
-            <span className="text-2xl font-bold">${spent.toFixed(2)}</span>
-            <span className="text-on-surface-variant text-xs ml-1">of ${limit.toFixed(0)}</span>
+            <span className="text-xl sm:text-2xl font-bold">${spent.toFixed(2)}</span>
+            <span className="text-on-surface-variant text-[10px] sm:text-xs ml-1">of ${limit.toFixed(0)}</span>
           </div>
           <div className={cn(
-            "text-xs font-bold px-2 py-1 rounded-lg",
+            "text-[10px] sm:text-xs font-bold px-2 py-1 rounded-lg",
             isOver ? "bg-error/10 text-error" : "bg-success/10 text-success"
           )}>
             {percentage.toFixed(0)}%
@@ -60,7 +60,7 @@ const BudgetCard = ({ budget, onDelete, isDeleting }) => {
         </div>
 
         {/* Progress Bar */}
-        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+        <div className="h-1.5 sm:h-2 w-full bg-white/5 rounded-full overflow-hidden">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
@@ -70,17 +70,17 @@ const BudgetCard = ({ budget, onDelete, isDeleting }) => {
           />
         </div>
 
-        <div className="flex items-center justify-between pt-2">
-          <div className="flex items-center space-x-1.5 text-on-surface-variant">
+        <div className="flex items-center justify-between pt-1 sm:pt-2">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 text-on-surface-variant">
             {isOver ? (
               <>
-                <AlertCircle className="w-4 h-4 text-error" />
-                <span className="text-[10px] font-bold text-error uppercase tracking-wider">Overspent by ${(spent - limit).toFixed(2)}</span>
+                <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 text-error" />
+                <span className="text-[8px] sm:text-[10px] font-bold text-error uppercase tracking-wider">Overspent by ${(spent - limit).toFixed(2)}</span>
               </>
             ) : (
               <>
-                <TrendingUp className="w-4 h-4 text-success" />
-                <span className="text-[10px] font-bold text-success uppercase tracking-wider">${remaining.toFixed(2)} remaining</span>
+                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-success" />
+                <span className="text-[8px] sm:text-[10px] font-bold text-success uppercase tracking-wider">${remaining.toFixed(2)} remaining</span>
               </>
             )}
           </div>
@@ -239,27 +239,27 @@ const Budgets = () => {
       animate={{ opacity: 1, y: 0 }}
       className="space-y-8 pb-20"
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Budgets</h1>
-          <p className="text-on-surface-variant mt-1 text-sm">Plan and control your spending by category.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Budgets</h1>
+          <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Plan and control your spending by category.</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
+        <Button onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
           <Plus className="w-4 h-4" />
           <span>Create Budget</span>
         </Button>
       </div>
 
       {/* Summary Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <Card className="bg-primary/5 border-primary/10 flex flex-col justify-between">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Total Budget</p>
-          <h2 className="text-3xl font-bold mt-4">${totalLimit.toFixed(2)}</h2>
-          <p className="text-xs text-on-surface-variant mt-2">Combined limit for all categories</p>
+          <h2 className="text-2xl sm:text-3xl font-bold mt-3 sm:mt-4">${totalLimit.toFixed(2)}</h2>
+          <p className="text-[10px] sm:text-xs text-on-surface-variant mt-2">Combined limit for all categories</p>
         </Card>
         <Card className="flex flex-col justify-between">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Total Spent</p>
-          <h2 className="text-3xl font-bold mt-4">${totalSpent.toFixed(2)}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mt-3 sm:mt-4">${totalSpent.toFixed(2)}</h2>
           <div className="flex items-center space-x-2 mt-2">
             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
               <div className="h-full bg-primary" style={{ width: `${Math.min(totalPercentage, 100)}%` }} />
@@ -267,11 +267,11 @@ const Budgets = () => {
             <span className="text-[10px] font-bold">{totalPercentage.toFixed(0)}%</span>
           </div>
         </Card>
-        <Card className="flex flex-col justify-between">
+        <Card className="flex flex-col justify-between sm:col-span-2 lg:col-span-1">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Remaining</p>
-          <h2 className="text-3xl font-bold mt-4">${Math.max(totalLimit - totalSpent, 0).toFixed(2)}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mt-3 sm:mt-4">${Math.max(totalLimit - totalSpent, 0).toFixed(2)}</h2>
           <p className={cn(
-            "text-xs font-bold mt-2",
+            "text-[10px] sm:text-xs font-bold mt-2",
             totalSpent > totalLimit ? "text-error" : "text-success"
           )}>
             {totalSpent > totalLimit ? "Over budget this month" : "On track for this month"}
@@ -281,17 +281,17 @@ const Budgets = () => {
 
       {/* Category Budgets Grid */}
       <div>
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
           <div className="flex items-center space-x-2">
-            <Target className="w-5 h-5 text-primary" />
-            <h3 className="font-bold text-lg">Category Breakdown</h3>
+            <Target className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <h3 className="font-bold text-base sm:text-lg">Category Breakdown</h3>
           </div>
-          <Button variant="secondary" className="px-3 py-1.5 text-xs font-bold" onClick={fetchBudgetsAndCategories}>
+          <Button variant="secondary" className="px-3 py-1.5 text-[10px] sm:text-xs font-bold w-full sm:w-auto" onClick={fetchBudgetsAndCategories}>
             Refresh
           </Button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {budgets.map(budget => (
             <BudgetCard 
               key={budget.id} 
@@ -304,12 +304,12 @@ const Budgets = () => {
           {/* Add New Budget Placeholder */}
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-[32px] p-8 hover:bg-white/5 hover:border-primary/50 transition-all group min-h-[220px]"
+            className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 hover:bg-white/5 hover:border-primary/50 transition-all group min-h-[180px] sm:min-h-[220px]"
           >
-            <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <Plus className="w-6 h-6 text-on-surface-variant" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/5 rounded-full flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+              <Plus className="w-5 h-5 sm:w-6 sm:h-6 text-on-surface-variant" />
             </div>
-            <p className="font-bold text-sm">Add New Budget</p>
+            <p className="font-bold text-xs sm:text-sm">Add New Budget</p>
             <p className="text-[10px] text-on-surface-variant mt-1">Set limits for more categories</p>
           </button>
         </div>
@@ -331,29 +331,29 @@ const Budgets = () => {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative w-full max-w-md bg-surface/90 border border-white/10 p-8 rounded-[32px] shadow-2xl backdrop-blur-xl z-10"
+              className="relative w-full max-w-md bg-surface/90 border border-white/10 p-5 sm:p-8 rounded-[24px] sm:rounded-[32px] shadow-2xl backdrop-blur-xl z-10"
             >
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-6 right-6 text-on-surface-variant hover:text-on-surface transition-colors p-1.5 hover:bg-white/5 rounded-xl"
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 text-on-surface-variant hover:text-on-surface transition-colors p-1.5 hover:bg-white/5 rounded-xl"
               >
                 <X className="w-4 h-4" />
               </button>
 
-              <div className="mb-6">
-                <h3 className="text-xl font-bold">Set Category Budget</h3>
-                <p className="text-xs text-on-surface-variant mt-1">Define monthly limits to keep your expenses in check.</p>
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-lg sm:text-xl font-bold">Set Category Budget</h3>
+                <p className="text-[10px] sm:text-xs text-on-surface-variant mt-1">Define monthly limits to keep your expenses in check.</p>
               </div>
 
-              <form onSubmit={handleCreateBudget} className="space-y-6">
+              <form onSubmit={handleCreateBudget} className="space-y-4 sm:space-y-6">
                 {/* Category Selection */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1">Category</label>
+                  <label className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1">Category</label>
                   <select 
                     required
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 px-6 text-sm font-medium outline-none focus:border-primary/50 transition-all appearance-none"
+                    className="w-full bg-white/5 border border-white/5 rounded-2xl py-3 sm:py-4 px-4 sm:px-6 text-xs sm:text-sm font-medium outline-none focus:border-primary/50 transition-all appearance-none"
                   >
                     <option value="" disabled className="bg-surface">Select category</option>
                     {categories.map(cat => (
@@ -364,7 +364,7 @@ const Budgets = () => {
 
                 {/* Amount Input */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1">Monthly Limit ($)</label>
+                  <label className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1">Monthly Limit ($)</label>
                   <input 
                     type="number" 
                     step="1"
@@ -372,15 +372,15 @@ const Budgets = () => {
                     placeholder="e.g. 500, 1000..."
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 px-6 text-sm font-medium outline-none focus:border-primary/50 transition-all"
+                    className="w-full bg-white/5 border border-white/5 rounded-2xl py-3 sm:py-4 px-4 sm:px-6 text-xs sm:text-sm font-medium outline-none focus:border-primary/50 transition-all"
                   />
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex gap-3 sm:gap-4 pt-2 sm:pt-4">
                   <Button 
                     type="button" 
                     variant="secondary" 
-                    className="flex-1 py-3" 
+                    className="flex-1 py-2.5 sm:py-3" 
                     onClick={() => setIsModalOpen(false)}
                     disabled={saving}
                   >
@@ -388,7 +388,7 @@ const Budgets = () => {
                   </Button>
                   <Button 
                     type="submit" 
-                    className="flex-[2] py-3 shadow-xl shadow-primary/20"
+                    className="flex-[2] py-2.5 sm:py-3 shadow-xl shadow-primary/20"
                     disabled={saving}
                   >
                     {saving ? "Saving..." : "Save Budget"}
